@@ -1,0 +1,42 @@
+@font-face {
+  font-family: "Anurati";
+  src: url(../fonts/Anurati-Regular.otf);
+}
+
+@font-face {
+  font-family: "NotoSansTC-Regular";
+  src: url(../fonts/NotoSansTC/NotoSansTC-Regular.otf);
+}
+
+@font-face {
+  font-family: "Verdana";
+  src: url(../fonts/Verdana.ttf);
+}
+
+.assemblyTextType {
+  font-family: Arial, NotoSansTC-Regular;
+}
+
+.NotoSansTC-Regular {
+	font-family: NotoSansTC-Regular;
+}
+
+.Anurati {
+	font-family: Anurati;
+}
+
+.Arial {
+	font-family: Arial;
+}
+
+.Verdana {
+	font-family: Verdana;
+}
+
+.Microsoft_JhengHei {
+	font-family: Microsoft JhengHei;
+}
+
+.navbar-En-Cn {
+	font-family: Arial,NotoSansTC-Regular;
+}
