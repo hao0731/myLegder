@@ -6,7 +6,18 @@
     max-width:80%;
     margin-top:5rem;
 }
+@media (min-width: 768px) {
+  .card-limit {
+       max-width: 90%;
+  }
+}
 
 .form-location {
     margin-top:5rem;
+}
+
+@media (max-width: 767px) {
+    .form-location {
+        margin-top:2rem;
+    }
 }
