@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { LoginStatusService } from '../../service/token/login-status.service';
 
 @Component({
   selector: 'home',
@@ -7,9 +10,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
 
-  constructor() { }
+  constructor(private router: Router, private loginStatus: LoginStatusService) { }
 
   ngOnInit() {
+    if(!this.loginStatus.isLogin()) this.router.navigate(['/signin']);
   }
 
 }

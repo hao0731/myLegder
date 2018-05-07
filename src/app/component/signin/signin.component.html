@@ -10,18 +10,19 @@
           <div class="card-body">
             <h3 class="text-center py-2">會員登入</h3>
             <hr>
+            <div *ngIf="alertMessage != 'loading' && alertMessage != 'ok'" class="alert alert-danger" role="alert">{{alertMessage}}</div>
             <form [formGroup]="signinForm" (ngSubmit)="submitForm(signinForm.value)" #loginForm="ngForm">
               <div class="form-group py-2">
                 <label for="username">使用者名稱</label>
-                <input type="text" id="username" class="form-control">
+                <input type="text" id="username" class="form-control" [formControl]="signinForm.controls['username']" required>
               </div>
               <div class="form-group">
                 <label for="pwd">密碼</label>
-                <input type="password" id="pwd" class="form-control">
+                <input type="password" id="pwd" class="form-control" [formControl]="signinForm.controls['password']" required>
               </div>
               <a [routerLink]="['/signup']">還不是會員?</a>
               <div class="text-center pt-3">
-                <button type="submit" class="btn btn-primary">登入</button>
+                <button type="submit" class="btn btn-primary" [disabled]="!loginForm.form.valid">登入</button>
               </div>
             </form>
           </div>

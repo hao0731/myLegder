@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
+import { Router } from '@angular/router';
 import { LoginStatusService } from './service/token/login-status.service';
 import { InitialLoginStatus } from './interface/login-status/initial-login-status';
 
@@ -11,7 +12,7 @@ import { InitialLoginStatus } from './interface/login-status/initial-login-statu
 })
 export class AppComponent {
   username: Observable<String> = this.initialStatus.username;
-  constructor(private http: HttpClient, private loginStatus: LoginStatusService, private initialStatus: InitialLoginStatus){}
+  constructor(private http: HttpClient, private router: Router, private loginStatus: LoginStatusService, private initialStatus: InitialLoginStatus){}
 
   logOut(): void {
     let headers = new HttpHeaders({
@@ -20,13 +21,9 @@ export class AppComponent {
     });
 
     this.http.post('/member/logout', {observe: 'response', headers: headers}).subscribe(res => {
-      if(res['message'] == 'logout') {
-        this.loginStatus.removeToken();
-        this.initialStatus.setInitialStatus();
-      }
-      else {
-        console.log(res);
-      }
+      this.loginStatus.removeToken();
+      this.initialStatus.setInitialStatus();
+      this.router.navigate(['/signin']);
     },err => {
       console.log(err);
     });

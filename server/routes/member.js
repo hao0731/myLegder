@@ -8,7 +8,7 @@ const sendJSONresponse = require('../lib/response');
 router.post('/signup', (req, res, next) => {
   User.count({$or:[{username: req.body.username},{email:req.body.email}]}, function(err, counter) {
     if(counter != 0) {
-      sendJSONresponse(res, 200 , {message: 'username or email is used.'});
+      sendJSONresponse(res, 401 , {message: 'username or email is used.'});
     }
     else {
       let user = new User();
@@ -18,7 +18,7 @@ router.post('/signup', (req, res, next) => {
       user.save(function(error, success) {
         let token;
         if(error) {
-          sendJSONresponse(res, 200 , {message: error});
+          sendJSONresponse(res, 404 , {message: error});
         }
         else {
           token = user.generateJwt();
@@ -35,21 +35,17 @@ router.post('/signin', (req, res, next) => {
     console.log(user);
     let token;
     if(err) {
-      sendJSONresponse(res, 200 , {message: err});
+      sendJSONresponse(res, 404 , {message: err});
       return ;
     }
-    if(!user) {
-      sendJSONresponse(res, 200 , {message: 'error'});
-      return ;
-    }
-    req.logIn(user, (error) => {
-      if(error) {
-        sendJSONresponse(res, 401 , info);
-        return ;
-      }
+    if(user) {
       token = user.generateJwt();
-      sendJSONresponse(res, 200 , { token: token });
-    });
+      sendJSONresponse(res, 200 , { token: token })
+    }
+    else {
+      sendJSONresponse(res, 401 , {message: 'username or password is not correct!'});
+      return ;
+    }
   })(req, res);
 });
 

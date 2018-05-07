@@ -9,11 +9,12 @@
       </div>
       <div class="collapse navbar-collapse justify-content-between" id="myNavbar">
          <div class="navbar-nav">
-          <a class="nav-item nav-link" [routerLink]="['/']"><i class="fa fa-home"></i> 首頁</a>
+          <a *ngIf="username.value != '使用者'" class="nav-item nav-link" [routerLink]="['/']"><i class="fa fa-home"></i> 首頁</a>
         </div>
         <div class="navbar-nav">
-            <a class="nav-item nav-link" [routerLink]="['/signup']">註冊</a>
-            <a class="nav-item nav-link" [routerLink]="['/signin']">登入</a>
+            <a *ngIf="username.value == '使用者'" class="nav-item nav-link" [routerLink]="['/signup']">註冊</a>
+            <a *ngIf="username.value == '使用者'" class="nav-item nav-link" [routerLink]="['/signin']">登入</a>
+            <a *ngIf="username.value != '使用者'" class="nav-item nav-link" href="javascript:void(0)" (click)="logOut()">登出，{{username.value}}</a>
         </div>
       </div>
     </div>
