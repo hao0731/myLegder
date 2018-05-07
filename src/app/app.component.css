@@ -1,0 +1,10 @@
+.sidenav {
+    position: fixed;
+    height: 100%;
+}
+
+@media(min-width: 768px) {
+    .main-block {
+        left: 16.666667%;
+    }
+}

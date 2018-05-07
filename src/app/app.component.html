@@ -2,12 +2,12 @@
   <nav class="navbar navbar-dark fixed-top navbar-expand-md bg-purple assemblyTextType" role="navigation">
     <div class="container">
       <div class="navbar-header">
-        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#myNavbar">
+        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target=".appMenu">
           <span class="navbar-toggler-icon"></span>
         </button>
         <a class="navbar-brand" href="#">myLedger</a>
       </div>
-      <div class="collapse navbar-collapse justify-content-between" id="myNavbar">
+      <div class="collapse navbar-collapse justify-content-between appMenu" id="appMenu">
          <div class="navbar-nav">
           <a *ngIf="username.value != '使用者'" class="nav-item nav-link" [routerLink]="['/']"><i class="fa fa-home"></i> 首頁</a>
         </div>
@@ -21,7 +21,12 @@
   </nav>
 </header>
 <main>
-  <div class="mt-5 pt-3">
-    <router-outlet></router-outlet>
+  <div class="row">
+    <div *ngIf="username.value != '使用者'" class="col-md-2 bg-purple sidenav mt-5 pt-3 pr-4 text-right assemblyTextType pc-show">
+      <a class="nav-item nav-link" [routerLink]="['/']">選項</a>
+    </div>
+    <div [ngClass]="{'mt-5':true,'pt-3':true,'col-md-10':username.value != '使用者','main-block':username.value != '使用者'}">
+      <router-outlet></router-outlet>
+    </div>
   </div>
 </main>
