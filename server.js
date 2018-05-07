@@ -28,7 +28,7 @@ app.use(cookieParser());
   maxAge:24*60*60*1000*7
 }));*/
 app.use(passport.initialize());
-app.use(passport.session());
+/*app.use(passport.session());*/
 app.use(function(err, req, res, next) {
   if(err.name == 'UnauthorizedError') {
     sendJSONresponse(res, 401, {message: err.name + ':' +err.message});
@@ -39,12 +39,12 @@ app.use('/api', api);
 app.use('/member', member);
 
 //connect database
-/*mongoose.connect(dbURL);
+mongoose.connect(dbURL);
 let db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
   console.log('database connect success!');
-});*/
+});
 
 // Send all other requests to the Angular app
 app.get('*', (req, res) => {

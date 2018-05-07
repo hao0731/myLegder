@@ -2,7 +2,7 @@
   <div class="container assemblyTextType" style="margin:0px auto;">
     <div class="row" style="max-width:1140px;">
       <div class="col-md-6 pc-show">
-        <img class="rounded mx-auto d-block intro-img" src="assets/images/sign/book.svg">
+        <img class="rounded mx-auto d-block intro-img" src="assets/images/sign/book.png">
         <p class="text-center text-light intro-text">讓記帳變成一種好習慣！<br>配置最佳的理財方法！</p>
       </div>
       <div class="col-md-6">
@@ -10,7 +10,7 @@
           <div class="card-body">
             <h3 class="text-center py-2">會員登入</h3>
             <hr>
-            <form>
+            <form [formGroup]="signinForm" (ngSubmit)="submitForm(signinForm.value)" #loginForm="ngForm">
               <div class="form-group py-2">
                 <label for="username">使用者名稱</label>
                 <input type="text" id="username" class="form-control">

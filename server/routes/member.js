@@ -58,24 +58,4 @@ router.post('/logout', (req, res, next) => {
   sendJSONresponse(res, 200 , {message: 'logout'});
 });
 
-router.get('/check', (req, res, next) => {
-  if(req.isAuthenticated()) {
-    res.json({
-      username: req.user.username
-    });
-  }
-  else {
-    res.json({
-      username: 'not member'
-    });
-  }
-});
-
-router.post('/posttest', (req, res, next) => {
-  console.log(req.body);
-  res.json({
-    'data': req.body
-  });
-});
-
 module.exports = router;
