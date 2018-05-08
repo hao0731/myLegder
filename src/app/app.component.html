@@ -12,12 +12,18 @@
         </div>
         <div *ngIf="username.value != '使用者'" class="navbar-nav sidenav">
           <a class="nav-item nav-link" [routerLink]="['/']"><i class="fa fa-home"></i> 首頁</a>
-          <a class="nav-item nav-link" [routerLink]="['/setting']"><i class="fa fa-cog"></i> 帳號設定</a>
+          <a class="nav-item nav-link" [routerLink]="['/settings']"><i class="fa fa-cog"></i> 帳號設定</a>
         </div>
         <div class="navbar-nav">
           <a *ngIf="username.value == '使用者'" class="nav-item nav-link" [routerLink]="['/signup']">註冊</a>
           <a *ngIf="username.value == '使用者'" class="nav-item nav-link" [routerLink]="['/signin']">登入</a>
-          <a *ngIf="username.value != '使用者'" class="nav-item nav-link" href="javascript:void(0)" (click)="logOut()">登出，{{username.value}}</a>
+          <div *ngIf="username.value != '使用者'" class="nav-item dropdown nav-dropdown-position">
+            <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="accountList" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="nav-limitshow">功能選單</span></a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="accountList">
+              <a class="dropdown-item" [routerLink]="['/settings']">帳號設定</a>
+              <a class="dropdown-item" href="javascript:void(0)" (click)="logOut()">登出</a>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { LoginStatusService } from '../../service/token/login-status.service';
 
 @Component({
-  selector: 'app-account-setting',
+  selector: 'account-setting',
   templateUrl: './account-setting.component.html',
   styleUrls: ['./account-setting.component.css']
 })
