@@ -14,6 +14,7 @@ import { LoginStatusService } from './service/token/login-status.service';
 import { DealLoginStatusService } from './service/token/deal-login-status.service';
 import { InitialLoginStatus } from './interface/login-status/initial-login-status';
 import { ChangeLoginStatus } from './component/signin/interface/change-login-status';
+import { AccountSettingComponent } from './component/account-setting/account-setting.component';
 
 
 
@@ -23,7 +24,8 @@ import { ChangeLoginStatus } from './component/signin/interface/change-login-sta
     HomeComponent,
     SigninComponent,
     SignupComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    AccountSettingComponent
   ],
   imports: [
     BrowserModule,

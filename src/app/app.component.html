@@ -1,6 +1,6 @@
 <header>
-  <nav class="navbar navbar-dark fixed-top navbar-expand-md bg-purple assemblyTextType" role="navigation">
-    <div class="container">
+  <nav class="navbar navbar-dark fixed-top navbar-expand-lg bg-purple assemblyTextType" role="navigation">
+    <div [ngClass]="{'container':username.value == '使用者','container-fluid':username.value != '使用者'}">
       <div class="navbar-header">
         <button type="button" class="navbar-toggler" data-toggle="collapse" data-target=".appMenu">
           <span class="navbar-toggler-icon"></span>
@@ -9,24 +9,22 @@
       </div>
       <div class="collapse navbar-collapse justify-content-between appMenu" id="appMenu">
          <div class="navbar-nav">
-          <a *ngIf="username.value != '使用者'" class="nav-item nav-link" [routerLink]="['/']"><i class="fa fa-home"></i> 首頁</a>
+        </div>
+        <div *ngIf="username.value != '使用者'" class="navbar-nav sidenav">
+          <a class="nav-item nav-link" [routerLink]="['/']"><i class="fa fa-home"></i> 首頁</a>
+          <a class="nav-item nav-link" [routerLink]="['/setting']"><i class="fa fa-cog"></i> 帳號設定</a>
         </div>
         <div class="navbar-nav">
-            <a *ngIf="username.value == '使用者'" class="nav-item nav-link" [routerLink]="['/signup']">註冊</a>
-            <a *ngIf="username.value == '使用者'" class="nav-item nav-link" [routerLink]="['/signin']">登入</a>
-            <a *ngIf="username.value != '使用者'" class="nav-item nav-link" href="javascript:void(0)" (click)="logOut()">登出，{{username.value}}</a>
+          <a *ngIf="username.value == '使用者'" class="nav-item nav-link" [routerLink]="['/signup']">註冊</a>
+          <a *ngIf="username.value == '使用者'" class="nav-item nav-link" [routerLink]="['/signin']">登入</a>
+          <a *ngIf="username.value != '使用者'" class="nav-item nav-link" href="javascript:void(0)" (click)="logOut()">登出，{{username.value}}</a>
         </div>
       </div>
     </div>
   </nav>
 </header>
 <main>
-  <div class="row">
-    <div *ngIf="username.value != '使用者'" class="col-md-2 bg-purple sidenav mt-5 pt-3 pr-4 text-right assemblyTextType pc-show">
-      <a class="nav-item nav-link" [routerLink]="['/']">選項</a>
-    </div>
-    <div [ngClass]="{'mt-5':true,'pt-3':true,'col-md-10':username.value != '使用者','main-block':username.value != '使用者'}">
-      <router-outlet></router-outlet>
-    </div>
+  <div [ngClass]="{'mt-5': true,'pt-3': true,'mainblock': username.value != '使用者'}">
+    <router-outlet></router-outlet>
   </div>
 </main>
