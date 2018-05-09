@@ -15,6 +15,7 @@ import { DealLoginStatusService } from './service/token/deal-login-status.servic
 import { InitialLoginStatus } from './interface/login-status/initial-login-status';
 import { ChangeLoginStatus } from './component/signin/interface/change-login-status';
 import { AccountSettingComponent } from './component/account-setting/account-setting.component';
+import { DisableControlDirective } from './directive/disable-control.directive';
 
 
 
@@ -25,7 +26,8 @@ import { AccountSettingComponent } from './component/account-setting/account-set
     SigninComponent,
     SignupComponent,
     NotFoundComponent,
-    AccountSettingComponent
+    AccountSettingComponent,
+    DisableControlDirective
   ],
   imports: [
     BrowserModule,
