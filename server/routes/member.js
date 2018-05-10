@@ -6,6 +6,7 @@ const User = require('../models/userSchema');
 const sendJSONresponse = require('../lib/response');
 const auth = require('../auth/auth');
 const getAuthUser = require('../lib/getUser');
+const regExp = require('../lib/regExpAuth');
 
 router.post('/signup', (req, res, next) => {
   User.count({$or:[{username: req.body.username},{email:req.body.email}]}, function(err, counter) {
@@ -53,8 +54,42 @@ router.post('/signin', (req, res, next) => {
 
 router.post('/update', auth, (req, res, next) => {
   getAuthUser(req, res, (req, res, user) => {
-    //do something
-    sendJSONresponse(res, 200, {message: 'ok'});
+    let optionKeys = Object.keys(req.body.editOptions);
+    let inputKeys = Object.keys(req.body);
+    inputKeys.pop();
+    inputKeys = inputKeys.filter(elem => {
+      return req.body[elem] !== '' && regExp[elem].test(req.body[elem]) === true
+    });
+    let updateKeys = optionKeys.filter(elem => {
+      return req.body.editOptions[elem] === true
+    });
+    if(inputKeys.sort().toString() !== updateKeys.sort().toString() || inputKeys.length == 0) {
+      sendJSONresponse(res, 401, {message: 'Oops! Please check your username, email or password is valid.'});
+    }
+    else {
+      for(let i = 0;i < updateKeys.length;i++) {
+        if(updateKeys[i] === 'email') {
+          user['profile']['email'] = req.body['email'];
+        }
+        else if(updateKeys[i] === 'password') {
+          user.setPassword(req.body['password']);
+        }
+        else {
+          user[updateKeys[i]] = req.body[updateKeys[i]];
+        }
+      }
+      user.save((error, success) => {
+        let token;
+        if(error) {
+          sendJSONresponse(res, 404, {message: error});
+          return ;
+        }
+        else {
+          token = user.generateJwt();
+          sendJSONresponse(res, 200, {token: token});
+        }
+      });
+    }  
   });
 });
 

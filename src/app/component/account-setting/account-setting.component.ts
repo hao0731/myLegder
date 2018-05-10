@@ -13,7 +13,7 @@ import { ChangeLoginStatus } from '../signin/interface/change-login-status';
 })
 export class AccountSettingComponent implements OnInit {
   updateForm: FormGroup;
-  alertMessage:String = 'loading';
+  alertMessage = 'loading';
   validRule = {
     email: /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/,
     username:  /^[\d|a-zA-Z]+$/
@@ -40,9 +40,6 @@ export class AccountSettingComponent implements OnInit {
   getEditStatus(value:any): void {
     if(this.updateForm.controls['editOptions']['value'][value]) {
       this.updateForm.controls['editOptions']['value'][value] = false;
-      this.updateForm.patchValue({
-        value: ''
-      })
       this.userData[value] = '';
     }
     else {
@@ -53,7 +50,7 @@ export class AccountSettingComponent implements OnInit {
   submitForm(value:any): void {
     let headers = new HttpHeaders({
       'Content-Type':'application/json',
-      'Authorization': 'Bearer'+this.loginStatus.getToken()
+      'Authorization': 'Bearer '+ this.loginStatus.getToken()
     })
     this.http.post('/member/update', value,{observe:'response', headers: headers}).subscribe(res => {
       this.alertMessage = 'ok';
@@ -61,9 +58,9 @@ export class AccountSettingComponent implements OnInit {
       this.loginStatus.saveToken(res['body']['token']);
       this.changeStatus.changeStatus();
 
-    }),(err: HttpErrorResponse) => {
+    },(err: HttpErrorResponse) => {
       this.alertMessage = err.error['message'];
-    }
+    });
   }
 
   ngOnInit() {
