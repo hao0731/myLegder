@@ -4,6 +4,8 @@ const passport = require('passport');
 const mongoose = require('mongoose');
 const User = require('../models/userSchema');
 const sendJSONresponse = require('../lib/response');
+const auth = require('../auth/auth');
+const getAuthUser = require('../lib/getUser');
 
 router.post('/signup', (req, res, next) => {
   User.count({$or:[{username: req.body.username},{email:req.body.email}]}, function(err, counter) {
@@ -47,6 +49,13 @@ router.post('/signin', (req, res, next) => {
       return ;
     }
   })(req, res);
+});
+
+router.post('/update', auth, (req, res, next) => {
+  getAuthUser(req, res, (req, res, user) => {
+    //do something
+    sendJSONresponse(res, 200, {message: 'ok'});
+  });
 });
 
 router.post('/logout', (req, res, next) => {
