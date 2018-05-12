@@ -16,6 +16,7 @@ import { InitialLoginStatus } from './interface/login-status/initial-login-statu
 import { ChangeLoginStatus } from './component/signin/interface/change-login-status';
 import { AccountSettingComponent } from './component/account-setting/account-setting.component';
 import { DisableControlDirective } from './directive/disable-control.directive';
+import { PersonalLedgerComponent } from './component/ledger/list/personal-ledger/personal-ledger.component';
 
 
 
@@ -27,7 +28,8 @@ import { DisableControlDirective } from './directive/disable-control.directive';
     SignupComponent,
     NotFoundComponent,
     AccountSettingComponent,
-    DisableControlDirective
+    DisableControlDirective,
+    PersonalLedgerComponent
   ],
   imports: [
     BrowserModule,
