@@ -9,13 +9,13 @@
             <h3>個人帳本</h3>
             <img src="assets/images/index/personal-ledger.svg" style="max-width:10rem;">
             <p class="text-muted mt-3">適合給個人、一般家庭使用，最純粹簡單的帳本</p>
-            <button class="btn btn-primary" data-toggle="modal" data-target="#setLedgerModal">建立個人帳本</button>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#setLedgerModal" (click)="setType('personal')">建立個人帳本</button>
           </div>
           <div class="col-xl-4 col-lg-5 my-3 text-center">
             <h3>組織帳本</h3>
             <img src="assets/images/index/organization-ledger.svg" style="max-width:10rem;">
             <p class="text-muted mt-3">適合給一個組織共同記帳所使用，可以設置編輯權限與公開權限</p>
-            <button class="btn btn-primary" data-toggle="modal" data-target="#setLedgerModal">建立組織帳本</button>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#setLedgerModal" (click)="setType('organization')">建立組織帳本</button>
           </div>
         </div>
       </div>

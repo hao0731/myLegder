@@ -9,9 +9,12 @@ import { LoginStatusService } from '../../service/token/login-status.service';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-
+  setType:String = '';
   constructor(private router: Router, private loginStatus: LoginStatusService) { }
 
+  setForm(type:String): void {
+    this.setType = type;
+  }
   ngOnInit() {
     if(!this.loginStatus.isLogin()) this.router.navigate(['/signin']);
   }
