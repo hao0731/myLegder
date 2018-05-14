@@ -15,4 +15,12 @@ router.route('/users')
     });
   });
 
+router.route('/ledgers')
+.post( auth,function(req, res, next) {
+  getAuthUser(req, res, function(req, res, user) {
+    console.log(req.body);
+    sendJSONresponse(res, 200, {data: req.body});
+  });
+});
+
 module.exports = router;
