@@ -3,6 +3,7 @@ const router = express.Router();
 const auth = require('../auth/auth');
 const getAuthUser = require('../lib/getUser');
 const User = require('../models/userSchema');
+const Ledger = require('../models/ledgerSchema');
 const sendJSONresponse = require('../lib/response');
 
 router.route('/users')
@@ -18,8 +19,21 @@ router.route('/users')
 router.route('/ledgers')
 .post( auth,function(req, res, next) {
   getAuthUser(req, res, function(req, res, user) {
-    console.log(req.body);
-    sendJSONresponse(res, 200, {data: req.body});
+    let ledger = new Ledger({
+      name: req.body.ledgername,
+      authorId: user._id,
+      authority: req.body.openAuth,
+      type: req.body.formType
+    });
+    ledger.save((err, success) => {
+      if(err) {
+        sendJSONresponse(res, 404, {message: error});
+        return ;
+      }
+      else {
+        sendJSONresponse(res, 200, {data: ledger._id});
+      }
+    });
   });
 });
 

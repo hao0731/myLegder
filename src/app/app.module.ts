@@ -17,6 +17,9 @@ import { ChangeLoginStatus } from './component/signin/interface/change-login-sta
 import { AccountSettingComponent } from './component/account-setting/account-setting.component';
 import { DisableControlDirective } from './directive/disable-control.directive';
 import { PersonalLedgerComponent } from './component/ledger/list/personal-ledger/personal-ledger.component';
+import { PersonalLedgerDetailComponent } from './component/ledger/detail/personal-ledger-detail/personal-ledger-detail.component';
+import { OrganizationLedgerDetailComponent } from './component/ledger/detail/organization-ledger-detail/organization-ledger-detail.component';
+import { OrganizationLedgerComponent } from './component/ledger/list/organization-ledger/organization-ledger.component';
 
 
 
@@ -29,7 +32,10 @@ import { PersonalLedgerComponent } from './component/ledger/list/personal-ledger
     NotFoundComponent,
     AccountSettingComponent,
     DisableControlDirective,
-    PersonalLedgerComponent
+    PersonalLedgerComponent,
+    PersonalLedgerDetailComponent,
+    OrganizationLedgerDetailComponent,
+    OrganizationLedgerComponent
   ],
   imports: [
     BrowserModule,

@@ -15,9 +15,8 @@ export class HomeComponent implements OnInit {
   setLedgerForm: FormGroup;
   constructor(private fb: FormBuilder, private http: HttpClient, private router: Router, private loginStatus: LoginStatusService) { 
     this.setLedgerForm = fb.group({
-      ledgerType: [this.setType, [Validators.required]],
       ledgername : ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
-      openAuth: 'close',
+      openAuth: 'close'
     })
   }
 
@@ -26,12 +25,20 @@ export class HomeComponent implements OnInit {
   }
 
   submitForm(value:any): void {
+    value.formType = this.setType;
     let headers = new HttpHeaders({
       'Content-Type':'application/json',
       'Authorization': 'Bearer '+ this.loginStatus.getToken()
     })
     this.http.post('/api/ledgers', value,{observe:'response', headers: headers}).subscribe(res => {
       this.alertMessage = 'ok';
+      if(this.setType === 'personal') {
+        this.router.navigate(['/my/ledgers/'+res['body']['data']]);
+      }
+      else {
+        this.router.navigate(['/organization/ledgers/'+res['body']['data']]);
+      }
+      
     },(err: HttpErrorResponse) => {
       this.alertMessage = err.error['message'];
     });
