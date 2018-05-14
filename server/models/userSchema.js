@@ -7,7 +7,11 @@ const userSchema = mongoose.Schema({
   salt: String,
   profile: {
     email: String
-  }
+  },
+  ledgers: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'ledgerData'
+  }]
 });
 
 userSchema.methods.setPassword = function(password) {
@@ -29,5 +33,15 @@ userSchema.methods.generateJwt = function() {
     username: this.username,
     exp:parseInt(expiry.getTime() /1000)}, ' ReadingClubSecret ');
 };
+
+userSchema.statics = {
+  findLedgers:function(query, callback) {
+    return this.find(query).populate('ledgers').exec(callback);
+  }
+} 
+
+userSchema.methods.findLedgers = function(query, callback) {
+  this.findOne(query).populate('ledgers').exec(callback);
+}
 
 module.exports = mongoose.model('userData', userSchema);

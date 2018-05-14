@@ -13,6 +13,7 @@
         <div *ngIf="username.value != '使用者'" class="navbar-nav sidenav">
           <a class="nav-item nav-link" [routerLink]="['/']"><i class="fa fa-home"></i> 首頁</a>
           <a class="nav-item nav-link" [routerLink]="['/my/ledgers']"><i class="fa fa-book"></i> 我的帳本</a>
+          <a class="nav-item nav-link" [routerLink]="['/organization/ledgers']"><i class="fa fa-users"></i> 組織帳本</a>
         </div>
         <div class="navbar-nav">
           <a *ngIf="username.value == '使用者'" class="nav-item nav-link" [routerLink]="['/signup']">註冊</a>
