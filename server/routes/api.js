@@ -21,10 +21,11 @@ router.route('/ledgers')
   getAuthUser(req, res, (req, res, user) => {
     let ledger = new Ledger({
       name: req.body.ledgername,
-      authorId: user._id,
+      author: user._id,
       authority: req.body.openAuth,
       type: req.body.formType,
-      members:[user._id]
+      members:[user._id],
+      admins:[user._id]
     });
     ledger.save((err, success) => {
       if(err) {
@@ -49,11 +50,8 @@ router.route('/ledgers')
 router.route('/ledgers/organization')
 .get(auth, (req, res, next) => {
   getAuthUser(req, res, (req, res, user) => {
-    User.findLedgers({_id:user._id},(err, userData)=> {
-      let ledgers = userData[0].ledgers;
-      ledgers = ledgers.filter(elem => {
-        return elem.type === 'organization'
-      });
+    User.findLedgers({_id:user._id}, {path: 'ledgers', match:{type: 'organization'}, populate: { path: 'author', select: 'username'}}, (err, userData)=> {
+      let ledgers = userData.ledgers;
       sendJSONresponse(res, 200, {data: ledgers});
     }); 
   });
@@ -62,11 +60,8 @@ router.route('/ledgers/organization')
 router.route('/ledgers/personal')
 .get(auth, (req, res, next) => {
   getAuthUser(req, res, (req, res, user) => {
-    User.findLedgers({_id:user._id},(err, userData)=> {
-      let ledgers = userData[0].ledgers;
-      ledgers = ledgers.filter(elem => {
-        return elem.type === 'personal'
-      });
+    User.findLedgers({_id:user._id}, {path: 'ledgers', match:{type: 'personal'}, populate: { path: 'author', select: 'username'}}, (err, userData)=> {
+      let ledgers = userData.ledgers;
       sendJSONresponse(res, 200, {data: ledgers});
     }); 
   });

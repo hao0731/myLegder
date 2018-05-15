@@ -9,7 +9,7 @@ import { LoginStatusService } from '../../../../service/token/login-status.servi
   styleUrls: ['./personal-ledger.component.css']
 })
 export class PersonalLedgerComponent implements OnInit {
-
+  ledgers:any = [];
   constructor(private http: HttpClient, private router: Router, private loginStatus: LoginStatusService) { }
 
   ngOnInit() {
@@ -19,7 +19,9 @@ export class PersonalLedgerComponent implements OnInit {
       'Authorization': 'Bearer '+ this.loginStatus.getToken()
     })
     this.http.get('/api/ledgers/personal', {observe:'response', headers: headers}).subscribe(res => {
-      console.log(res);
+      this.ledgers = res['body']['data'];
+    },(err:HttpErrorResponse) => {
+      console.log(err);
     });
   }
 
