@@ -47,7 +47,31 @@ router.route('/ledgers')
   });
 });
 
-router.route('/ledgers/organization')
+router.route('/ledgers/:id')
+.get(auth, (req, res, next) => {
+  getAuthUser(req, res, (req, res, user) => {
+    Ledger.findOne({_id: req.params.id})
+    .populate({path:'author', select: 'username'})
+    .populate({path: 'admins', select: 'username'})
+    .populate({path: 'members', select: 'username'})
+    .exec((err, ledgerData)=> {
+      if(!ledgerData || err) {
+        sendJSONresponse(res, 404, {message: 'not found'});
+      }
+      else if(ledgerData.type === 'personal' && ledgerData.author._id.toString() !== user._id.toString()) {
+        sendJSONresponse(res, 403, {message: 'This request is not authorized.'});
+      }
+      else if(ledgerData.type === 'organization' && ledgerData.authority === 'close' && !ledgerData.members.filter(elem => {return elem._id.toString() === user._id.toString()}).length) {
+        sendJSONresponse(res, 403, {message: 'This request is not authorized.'});
+      }
+      else {
+        sendJSONresponse(res, 200, {data: ledgerData});
+      }      
+    });
+  });
+})
+
+router.route('/organization')
 .get(auth, (req, res, next) => {
   getAuthUser(req, res, (req, res, user) => {
     User.findLedgers({_id:user._id}, {path: 'ledgers', match:{type: 'organization'}, populate: { path: 'author', select: 'username'}}, (err, userData)=> {
@@ -57,7 +81,7 @@ router.route('/ledgers/organization')
   });
 })
 
-router.route('/ledgers/personal')
+router.route('/personal')
 .get(auth, (req, res, next) => {
   getAuthUser(req, res, (req, res, user) => {
     User.findLedgers({_id:user._id}, {path: 'ledgers', match:{type: 'personal'}, populate: { path: 'author', select: 'username'}}, (err, userData)=> {

@@ -18,7 +18,7 @@ export class PersonalLedgerComponent implements OnInit {
       'Content-Type':'application/json',
       'Authorization': 'Bearer '+ this.loginStatus.getToken()
     })
-    this.http.get('/api/ledgers/personal', {observe:'response', headers: headers}).subscribe(res => {
+    this.http.get('/api/personal', {observe:'response', headers: headers}).subscribe(res => {
       this.ledgers = res['body']['data'];
     },(err:HttpErrorResponse) => {
       console.log(err);
