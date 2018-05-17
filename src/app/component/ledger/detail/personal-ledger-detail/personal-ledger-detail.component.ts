@@ -10,6 +10,7 @@ import { LoginStatusService } from '../../../../service/token/login-status.servi
 })
 export class PersonalLedgerDetailComponent implements OnInit {
   ledgerId: String;
+  ledger: any = undefined;
   constructor(private http: HttpClient, private router: Router, private route:ActivatedRoute, private loginStatus: LoginStatusService) { }
 
   ngOnInit() {
@@ -21,6 +22,7 @@ export class PersonalLedgerDetailComponent implements OnInit {
     })
     this.http.get('/api/ledgers/'+ this.ledgerId, {observe:'response', headers: headers}).subscribe(res => {
       console.log(res['body']['data']);
+      this.ledger = res['body']['data'];
     },(err:HttpErrorResponse)=> {
       console.log(err);
     });

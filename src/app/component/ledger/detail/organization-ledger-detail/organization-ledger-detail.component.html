@@ -1,3 +1,15 @@
-<p>
-  organization-ledger-detail works!
-</p>
+<section>
+  <div *ngIf="ledger === undefined" align="center" class="loading">
+    <div class="text-center" style="width:10rem;">
+        <i class="fas fa-10x fa-spinner fa-pulse text-light"></i>
+    </div>
+  </div>
+  <div *ngIf="ledger !== undefined" class="container-fluid">
+    <div class="card bg-light mb-3 assemblyTextType">
+      <div class="card-body">
+        <h2>{{ledger.name}}</h2>
+        <hr>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,29 @@
+@media (max-width: 991px) {
+    .loading {
+        position: absolute;
+        top:50%;
+        left:50%;
+        margin-top:-5rem;
+        margin-left:-5rem;
+    }
+}
+
+@media(min-width:992px) and (max-width:1749px) {
+    .loading {
+        position: absolute;
+        top:50%;
+        left:60%;
+        margin-top:-5rem;
+        margin-left:-5rem;
+    }   
+}
+
+@media (min-width: 1750px) {
+    .loading {
+        position: absolute;
+        top:50%;
+        left:57%;
+        margin-top:-5rem;
+        margin-left:-5rem;
+    }
+}
