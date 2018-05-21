@@ -9,6 +9,54 @@
       <div class="card-body">
         <h2>{{ledger.name}}</h2>
         <hr>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#accountModal">
+          新增交易紀錄
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+<section>
+  <div class="modal fade" id="accountModal" tabindex="-1" role="dialog" aria-labelledby="accountModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content assemblyTextType">
+        <form [formGroup]="accountForm" (ngSubmit)="submitForm(accountForm.value)" #addTransForm="ngForm">
+          <div class="modal-header">
+            <h5 class="modal-title" id="accountModalTitle">記錄帳本</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="accountName">交易名稱</label>
+              <input type="text" id="accountName" class="form-control" placeholder="輸入3-20個字元" [formControl]="accountForm.controls['accountName']" required>
+            </div>
+            <div class="form-group">
+              <label for="accountClass">交易類別</label>
+              <select class="form-control" id="accountClass" [formControl]="accountForm.controls['accountClass']" required>
+                <option>食</option>
+                <option>衣</option>
+                <option>住</option>
+                <option>行</option>
+                <option>育</option>
+                <option>樂</option>
+                <option>收益</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="accountPrice">交易金額</label>
+              <input type="text" id="accountPrice" class="form-control" placeholder="只輸入阿拉伯數字" [formControl]="accountForm.controls['accountPrice']" required>
+            </div>
+            <div class="form-group">
+              <label for="accountDate">交易日期</label>
+              <input type="date" id="accountDate" class="form-control" [formControl]="accountForm.controls['accountDate']" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary" [disabled]="!addTransForm.form.valid">新增</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>

@@ -4,6 +4,7 @@ const auth = require('../auth/auth');
 const getAuthUser = require('../lib/getUser');
 const User = require('../models/userSchema');
 const Ledger = require('../models/ledgerSchema');
+const LedgerDetail = require('../models/ledgerDetailSchema');
 const sendJSONresponse = require('../lib/response');
 
 router.route('/users')
@@ -68,6 +69,29 @@ router.route('/ledgers/:id')
         sendJSONresponse(res, 200, {data: ledgerData});
       }      
     });
+  });
+})
+
+router.route('/ledgers/details/:id')
+.post(auth, (req, res, next) => {
+  getAuthUser(req, res, (req, res, user) => {
+    let detail = new LedgerDetail({
+      name: req.body.accountName,
+      class: req.body.accountClass,
+      price: req.body.accountPrice,
+      timeStamp: req.body.accountDate,
+      recorder: user._id,
+      ledger: req.body.ledgerId
+    });
+    detail.save((err, success) => {
+      if(err) {
+        sendJSONresponse(res, 404, {message: err});
+      }
+      else {
+        sendJSONresponse(res, 200, {data: 'ok'});
+      }
+    });
+    
   });
 })
 

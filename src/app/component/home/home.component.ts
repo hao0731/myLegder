@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { LoginStatusService } from '../../service/token/login-status.service';
+declare let $:any;
 
 @Component({
   selector: 'home',
@@ -32,6 +33,7 @@ export class HomeComponent implements OnInit {
     })
     this.http.post('/api/ledgers', value,{observe:'response', headers: headers}).subscribe(res => {
       this.alertMessage = 'ok';
+      $('#setLedgerModal').modal('hide')
       if(this.setType === 'personal') {
         this.router.navigate(['/my/ledgers/'+res['body']['data']]);
       }
