@@ -18,9 +18,9 @@ const ledgerSchema = mongoose.Schema({
 });
 
 ledgerSchema.statics = {
-    findMembers: function(query, condition, callback) {
+    findMembers: (query, condition, callback) => {
         return this.findOne(query).populate(condition).exec(callback);
-      }
+    }
 }
 
 module.exports = mongoose.model('ledgerData', ledgerSchema);

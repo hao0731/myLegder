@@ -75,7 +75,7 @@ router.route('/ledgers/:id')
 router.route('/ledgers/details/:id')
 .get(auth, (req, res, next) => {
   getAuthUser(req, res, (req, res, user) => {
-    LedgerDetail.find({}).exec((err, detailData) => {
+    LedgerDetail.find({ledger: req.params.id}).populate({path: 'recorder', select: 'username'}).exec((err, detailData) => {
       if(err) {
         sendJSONresponse(res, 404, {message: 'not found'});
       }
@@ -87,23 +87,29 @@ router.route('/ledgers/details/:id')
 })
 .post(auth, (req, res, next) => {
   getAuthUser(req, res, (req, res, user) => {
-    let detail = new LedgerDetail({
-      name: req.body.accountName,
-      class: req.body.accountClass,
-      price: req.body.accountPrice,
-      timeStamp: req.body.accountDate,
-      recorder: user._id,
-      ledger: req.body.ledgerId
-    });
-    detail.save((err, success) => {
-      if(err) {
-        sendJSONresponse(res, 404, {message: err});
+    Ledger.findOne({_id: req.params.id}).exec((error, ledgerData) => {
+      if(!ledgerData || error) {
+        sendJSONresponse(res, 404, {message: error});
       }
       else {
-        sendJSONresponse(res, 200, {data: 'ok'});
+        let detail = new LedgerDetail({
+          name: req.body.accountName,
+          class: req.body.accountClass,
+          price: req.body.accountPrice,
+          timeStamp: req.body.accountDate,
+          recorder: user._id,
+          ledger: req.params.id
+        });
+        detail.save((err, success) => {
+          if(err) {
+            sendJSONresponse(res, 404, {message: err});
+          }
+          else {
+            sendJSONresponse(res, 200, {data: 'ok'});
+          }
+        });
       }
     });
-    
   });
 })
 

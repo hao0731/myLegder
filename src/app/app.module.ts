@@ -20,6 +20,8 @@ import { PersonalLedgerComponent } from './component/ledger/list/personal-ledger
 import { PersonalLedgerDetailComponent } from './component/ledger/detail/personal-ledger-detail/personal-ledger-detail.component';
 import { OrganizationLedgerDetailComponent } from './component/ledger/detail/organization-ledger-detail/organization-ledger-detail.component';
 import { OrganizationLedgerComponent } from './component/ledger/list/organization-ledger/organization-ledger.component';
+import { CaculateTotalService } from './component/ledger/detail/service/caculate-total.service';
+import { CaculateTotalInterface } from './component/ledger/detail/interface/caculate-total';
 
 
 
@@ -48,7 +50,9 @@ import { OrganizationLedgerComponent } from './component/ledger/list/organizatio
     LoginStatusService,
     DealLoginStatusService,
     { provide:InitialLoginStatus, useExisting: DealLoginStatusService },
-    { provide:ChangeLoginStatus, useExisting: DealLoginStatusService }
+    { provide:ChangeLoginStatus, useExisting: DealLoginStatusService },
+    CaculateTotalService,
+    { provide:CaculateTotalInterface, useExisting: CaculateTotalService }
   ],
   bootstrap: [AppComponent]
 })
