@@ -12,6 +12,7 @@ import { LoginStatusService } from '../../../../service/token/login-status.servi
 export class PersonalLedgerDetailComponent implements OnInit {
   ledgerId: String;
   ledger: any = undefined;
+  ledgerDetail:any = [];
   accountForm: FormGroup;
   constructor(private fb: FormBuilder, private http: HttpClient, private router: Router, private route:ActivatedRoute, private loginStatus: LoginStatusService) { 
     this.accountForm = fb.group({
@@ -45,6 +46,13 @@ export class PersonalLedgerDetailComponent implements OnInit {
     this.http.get('/api/ledgers/'+ this.ledgerId, {observe:'response', headers: headers}).subscribe(res => {
       console.log(res['body']['data']);
       this.ledger = res['body']['data'];
+    },(err:HttpErrorResponse)=> {
+      console.log(err);
+    });
+
+    this.http.get('/api/ledgers/details/'+ this.ledgerId, {observe:'response', headers: headers}).subscribe(res => {
+      console.log(res['body']['data']);
+      this.ledgerDetail = res['body']['data'];
     },(err:HttpErrorResponse)=> {
       console.log(err);
     });

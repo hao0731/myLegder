@@ -73,6 +73,18 @@ router.route('/ledgers/:id')
 })
 
 router.route('/ledgers/details/:id')
+.get(auth, (req, res, next) => {
+  getAuthUser(req, res, (req, res, user) => {
+    LedgerDetail.find({}).exec((err, detailData) => {
+      if(err) {
+        sendJSONresponse(res, 404, {message: 'not found'});
+      }
+      else {
+        sendJSONresponse(res, 200, {data: detailData});
+      }
+    });
+  });
+})
 .post(auth, (req, res, next) => {
   getAuthUser(req, res, (req, res, user) => {
     let detail = new LedgerDetail({
