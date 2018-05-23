@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { LoginStatusService } from '../../../../service/token/login-status.service';
 import { CaculateTotalInterface } from '../interface/caculate-total';
+import * as Chart from 'chart.js';
  
 @Component({
   selector: 'app-personal-ledger-detail',
@@ -15,6 +16,10 @@ export class PersonalLedgerDetailComponent implements OnInit {
   ledger: any = undefined;
   ledgerDetail:any = [];
   total:any = [0,0,0];
+  //Chart
+  BarChart:any;
+  classData:any = [0,0,0,0,0,0,0];
+
   accountForm: FormGroup;
   constructor(private fb: FormBuilder, private http: HttpClient, private router: Router, private route:ActivatedRoute, private loginStatus: LoginStatusService, private caculateTotal: CaculateTotalInterface) { 
     this.accountForm = fb.group({
@@ -58,6 +63,21 @@ export class PersonalLedgerDetailComponent implements OnInit {
       this.total[0] = this.caculateTotal.calcIncome(this.ledgerDetail);
       this.total[1] = this.caculateTotal.calcCost(this.ledgerDetail);
       this.total[2] = this.caculateTotal.calcDesposit(this.ledgerDetail);
+      this.classData = this.caculateTotal.analysisClass(this.ledgerDetail);
+      this.BarChart = new Chart('barChart', {
+        type: 'bar',
+        data:{
+          labels: ['食','衣','住','行','育','樂','收益'],
+          datasets: [{
+            label: "金額",
+            backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgb(255, 99, 132)',
+            data: this.classData
+          }]
+        },
+        options: {
+        }
+      });
     },(err:HttpErrorResponse)=> {
       console.log(err);
     });
