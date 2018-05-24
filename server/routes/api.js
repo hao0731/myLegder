@@ -87,9 +87,12 @@ router.route('/ledgers/details/:id')
 })
 .post(auth, (req, res, next) => {
   getAuthUser(req, res, (req, res, user) => {
-    Ledger.findOne({_id: req.params.id}).exec((error, ledgerData) => {
+    Ledger.findOne({_id: req.params.id}).populate({path: 'admins', match:{username: user.username}}).exec((error, ledgerData) => {
       if(!ledgerData || error) {
         sendJSONresponse(res, 404, {message: error});
+      }
+      else if(!ledgerData.admins.length) {
+        sendJSONresponse(res, 403, {message: 'not Authorized'});
       }
       else {
         let detail = new LedgerDetail({
@@ -105,7 +108,7 @@ router.route('/ledgers/details/:id')
             sendJSONresponse(res, 404, {message: err});
           }
           else {
-            sendJSONresponse(res, 200, {data: 'ok'});
+            sendJSONresponse(res, 200, {data: detail});
           }
         });
       }

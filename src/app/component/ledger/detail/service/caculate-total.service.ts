@@ -26,7 +26,7 @@ export class CaculateTotalService implements CaculateTotalInterface {
     return total;
   }
 
-  analysisClass(array:any): any {
+  analysisClass(array:any, callback:any): any {
     const className = ['食','衣','住','行','育','樂','收益']; 
     let Class = [0,0,0,0,0,0,0];
     for(let item of array) {
@@ -34,6 +34,6 @@ export class CaculateTotalService implements CaculateTotalInterface {
         if(item.class === className[i]) Class[i] += Number(item.price);
       }
     }
-    return Class;
+    return callback(Class);
   }
 }
