@@ -4,11 +4,129 @@
         <i class="fas fa-10x fa-spinner fa-pulse text-light"></i>
     </div>
   </div>
-  <div *ngIf="ledger !== undefined" class="container-fluid">
+  <div class="container-fluid" [hidden]="ledger === undefined">
     <div class="card bg-light mb-3 assemblyTextType">
       <div class="card-body">
-        <h2>{{ledger.name}}</h2>
+        <div class="row">
+          <div class="col-10">
+            <h2 *ngIf="ledger !== undefined">{{ledger.name}}</h2>
+            <h2 *ngIf="ledger === undefined">Wrong!</h2>
+          </div>
+          <div class="col-2 text-right">
+            <button class="btn btn-primary button-PC-show" data-target="#accountModal" data-toggle="modal" type="button">新增交易紀錄</button>
+            <i class="fas fa-pencil-alt text-muted button-mobile-show" style="cursor: pointer;width: 23px;height: 23px;" data-target="#accountModal" data-toggle="modal"></i>
+          </div>
+        </div>
         <hr>
+        <div class="card">
+          <div class="card-header">
+            收支狀況
+          </div>
+          <div class="card-body">
+            <div class="table-responsive-sm">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">收益</th>
+                    <th scope="col">費損</th>
+                    <th scope="col">剩餘</th>
+                  </tr>                    
+                </thead>
+                <tbody>
+                    <td class="text-primary">{{total[0] | currency}}</td>
+                    <td class="text-danger">{{total[1] | currency}}</td>
+                    <td class="font-weight-bold text-info">{{total[2] | currency}}</td>
+                </tbody>
+              </table>
+            </div>
+          </div>         
+        </div>
+        <div class="card mt-3">
+          <div class="card-header">
+            直方圖
+          </div>
+          <div class="card-body">
+              <canvas id="barChart"></canvas>
+          </div>
+        </div>
+        <div class="card mt-3">
+          <div class="card-header">
+            帳本一覽表
+          </div>
+          <div class="card-body">
+            <div *ngIf="ledgerDetail.length > 0" class="table-responsive-sm">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">日期</th>
+                    <th scope="col">名稱</th>
+                    <th scope="col">類別</th>
+                    <th scope="col">價格</th>
+                    <th scope="col">記錄者</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let items of ledgerDetail">
+                    <th scope="row">{{items.timeStamp}}</th>
+                    <td>{{items.name}}</td>
+                    <td>{{items.class}}</td>
+                    <td>{{items.price | currency}}</td>
+                    <td>{{items.recorder.username}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div *ngIf="!ledgerDetail.length" class="text-center text-muted">
+                <i class="fas fa-5x fa-piggy-bank"></i>
+                <p class="mt-3">您還沒有開始記帳呦！趕快開始吧！</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section>
+  <div class="modal fade" id="accountModal" tabindex="-1" role="dialog" aria-labelledby="accountModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content assemblyTextType">
+        <form [formGroup]="accountForm" (ngSubmit)="submitForm(accountForm.value)" #addTransForm="ngForm">
+          <div class="modal-header">
+            <h5 class="modal-title" id="accountModalTitle">記錄帳本</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="accountName">交易名稱</label>
+              <input type="text" id="accountName" class="form-control" placeholder="輸入3-20個字元" [formControl]="accountForm.controls['accountName']" required>
+            </div>
+            <div class="form-group">
+              <label for="accountClass">交易類別</label>
+              <select class="form-control" id="accountClass" [formControl]="accountForm.controls['accountClass']" required>
+                <option>食</option>
+                <option>衣</option>
+                <option>住</option>
+                <option>行</option>
+                <option>育</option>
+                <option>樂</option>
+                <option>收益</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="accountPrice">交易金額</label>
+              <input type="text" id="accountPrice" class="form-control" placeholder="只輸入阿拉伯數字" [formControl]="accountForm.controls['accountPrice']" required>
+            </div>
+            <div class="form-group">
+              <label for="accountDate">交易日期</label>
+              <input type="date" id="accountDate" class="form-control" [formControl]="accountForm.controls['accountDate']" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary" [disabled]="!addTransForm.form.valid">新增</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>

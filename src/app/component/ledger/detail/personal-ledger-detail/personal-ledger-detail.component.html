@@ -9,7 +9,8 @@
       <div class="card-body">
         <div class="row">
           <div class="col-10">
-            <h2>HAO的家庭帳本</h2>
+            <h2 *ngIf="ledger !== undefined">{{ledger.name}}</h2>
+            <h2 *ngIf="ledger === undefined">Wrong!</h2>
           </div>
           <div class="col-2 text-right">
             <button class="btn btn-primary button-PC-show" data-target="#accountModal" data-toggle="modal" type="button">新增交易紀錄</button>
