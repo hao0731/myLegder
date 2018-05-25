@@ -7,7 +7,7 @@ import { CaculateTotalInterface } from '../interface/caculate-total';
 import * as Chart from 'chart.js';
  
 @Component({
-  selector: 'app-personal-ledger-detail',
+  selector: 'personal-ledger-detail',
   templateUrl: './personal-ledger-detail.component.html',
   styleUrls: ['./personal-ledger-detail.component.css']
 })

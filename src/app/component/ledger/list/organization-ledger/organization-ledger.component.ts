@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { LoginStatusService } from '../../../../service/token/login-status.service';
 
 @Component({
-  selector: 'app-organization-ledger',
+  selector: 'organization-ledger',
   templateUrl: './organization-ledger.component.html',
   styleUrls: ['./organization-ledger.component.css']
 })

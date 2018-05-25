@@ -7,11 +7,12 @@ import { CaculateTotalInterface } from '../interface/caculate-total';
 import * as Chart from 'chart.js';
 
 @Component({
-  selector: 'app-organization-ledger-detail',
+  selector: 'organization-ledger-detail',
   templateUrl: './organization-ledger-detail.component.html',
   styleUrls: ['./organization-ledger-detail.component.css']
 })
 export class OrganizationLedgerDetailComponent implements OnInit {
+  isAdmin: Boolean = false;
   ledgerId: String;
   ledger: any = undefined;
   ledgerDetail:any = [];
@@ -71,12 +72,12 @@ export class OrganizationLedgerDetailComponent implements OnInit {
     })
     this.http.get('/api/ledgers/'+ this.ledgerId, {observe:'response', headers: headers}).subscribe(res => {
       this.ledger = res['body']['data'];
+      if(this.ledger['admins'].filter(elem => {return this.loginStatus.getCurrentUser()['username'] === elem['username']}).length) this.isAdmin = true;
     },(err:HttpErrorResponse)=> {
       console.log(err);
     });
 
     this.http.get('/api/ledgers/details/'+ this.ledgerId, {observe:'response', headers: headers}).subscribe(res => {
-      console.log(res['body']['data']);
       this.ledgerDetail = res['body']['data'];
       this.BarChart = new Chart('barChart', {
         type: 'bar',
