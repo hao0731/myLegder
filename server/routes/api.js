@@ -71,6 +71,56 @@ router.route('/ledgers/:id')
     });
   });
 })
+.delete(auth, (req, res, next) => {
+  getAuthUser(req, res, (req, res, user) => {
+    Ledger.findOne({_id: req.params.id})
+    .populate({path: 'author', select:'_id'})
+    .exec((err, ledgerData) => {
+      if(err || !ledgerData) {
+        sendJSONresponse(res, 404, {message: 'not found'});
+      }
+      else if(ledgerData.author._id.toString() === user._id.toString()) {
+        User.update({_id: {$in: ledgerData.members}}, {$pull: {ledgers: {_id: ledgerData._id}}}, {multi: true},(error, docs) => {
+          console.log(docs);
+          LedgerDetail.remove({ledger: ledgerData._id}, (err, docs) => {
+            if(err) {
+              sendJSONresponse(res, 404, {message: err});
+            } 
+            else {
+              Ledger.remove({_id: ledgerData._id}, (err, docs) => {
+                if(err) {
+                  sendJSONresponse(res, 404, {message: err});
+                }
+                else {
+                  sendJSONresponse(res, 200, {data: 'ok'});
+                }
+              });
+            }
+          });
+        });
+      }
+      else {
+        User.update({_id: user._id}, {$pull: {ledgers: {_id: ledgerData._id}}},(error, docs) => {
+          if(error) {
+            sendJSONresponse(res, 404, {message: error});
+          }
+          else {
+            ledgerData.admins = ledgerData.admins.filter(elem => {return elem !== user._id});
+            ledgerData.members = ledgerData.members.filter(elem => {return elem !== user._id});
+            ledgerData.save((err, success) => {
+              if(err) {
+                sendJSONresponse(res, 404, {message: err});
+              }
+              else {
+                sendJSONresponse(res, 200, {data: 'ok'});
+              }
+            });
+          }
+        });
+      }
+    });
+  });
+});
 
 router.route('/ledgers/details/:id')
 .get(auth, (req, res, next) => {
