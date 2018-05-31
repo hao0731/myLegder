@@ -18,6 +18,18 @@ router.route('/users')
   });
 
 router.route('/ledgers')
+.get(auth, (req, res, next) => {
+  getAuthUser(req, res, (req, res, user) => {
+    Ledger.find({name: {$regex: '.*' + req.query.ledgerName + '.*'}, authority: 'open'}).populate({path: 'authhor', select: 'username'}).exec((err, ledgerData) => {
+      if(err || !ledgerData.length) {
+        sendJSONresponse(res, 404, {message: '查無相符項目'});
+      }
+      else {
+        sendJSONresponse(res, 200, {data: ledgerData});
+      }
+    });
+  });
+})
 .post(auth, (req, res, next) => {
   getAuthUser(req, res, (req, res, user) => {
     let ledger = new Ledger({

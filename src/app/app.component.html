@@ -8,7 +8,11 @@
         <a class="navbar-brand" href="#">myLedger</a>
       </div>
       <div class="collapse navbar-collapse justify-content-between appMenu" id="appMenu">
-         <div class="navbar-nav">
+        <div class="navbar-nav">
+          <form *ngIf="username.value != '使用者'" [formGroup]="searchForm" class="form-inline nav-search" (ngSubmit)="submitSearchForm(searchForm.value)" #searchLedgerForm="ngForm">
+            <input class="form-control mr-sm-2" type="search" placeholder="輸入帳本名稱" aria-label="Search" [formControl]="searchForm.controls.ledgerName">
+            <button class="btn btn-outline-light my-2 my-sm-0" type="submit" data-toggle="modal" data-target="#searchLedgerModal" [disabled]="!searchLedgerForm.form.valid">搜尋</button>
+          </form>
         </div>
         <div *ngIf="username.value != '使用者'" class="navbar-nav sidenav">
           <a class="nav-item nav-link" [routerLink]="['/']"><i class="fa fa-home"></i> 首頁</a>
@@ -34,4 +38,39 @@
   <div [ngClass]="{'mt-5': true,'pt-3': true,'mainblock': username.value != '使用者'}">
     <router-outlet></router-outlet>
   </div>
+  <section>
+    <div class="modal fade" id="searchLedgerModal" tabindex="-1" role="dialog" aria-labelledby="searchLedgerModalTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content assemblyTextType">
+          <div class="modal-header">
+            <h5 class="modal-title">搜尋結果</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body text-center">
+            <div *ngIf="searchLedger[0] === 'loading'" class="my-3">
+                <i class="fas fa-5x fa-spinner fa-pulse text-light"></i>
+            </div>          
+            <div *ngIf="searchLedger[0] === '查無相符項目'" class="my-3">
+              <h3>{{ searchLedger }}</h3>
+            </div>
+            <div *ngIf="searchLedger[0] !== '查無相符項目' && searchLedger[0] !== 'loading'" >
+              <div *ngFor="let item of searchLedger" class="mb-3">
+                <div class="row">
+                  <div class="col-6 text-left">
+                    <h5>{{ item.name }}</h5>
+                  </div>
+                  <div class="col-6 text-right">
+                    <a class="btn btn-primary" routerLink="/organization/ledgers/{{item._id}}" (click)="hideModal()">檢視</a>
+                  </div>
+                </div>
+                <hr>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 </main>

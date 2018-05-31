@@ -14,6 +14,10 @@
     .nav-dropdown-position {
         margin-right: 1rem;
     }
+
+    .nav-search {
+        margin-top: 20px;
+    }
 }
 
 @media(min-width:992px) and (max-width:1199px) {
@@ -38,6 +42,10 @@
     .mainblock {
         margin-left: 210px;
     }
+
+    .nav-search {
+        margin-left: 90px;
+    }
 }
 
 @media(min-width:1200px) {
@@ -61,5 +69,9 @@
 
     .mainblock {
         margin-left: 260px;
+    }
+
+    .nav-search {
+        margin-left: 140px;
     }
 }
