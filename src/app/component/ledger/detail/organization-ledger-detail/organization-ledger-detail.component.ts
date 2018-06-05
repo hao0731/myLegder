@@ -48,6 +48,38 @@ export class OrganizationLedgerDetailComponent implements OnInit {
     });
   }
 
+  controlMemberLevel(id:any,condition:String) {
+    let headers = new HttpHeaders({
+      'Content-Type':'application/json',
+      'Authorization': 'Bearer '+ this.loginStatus.getToken()
+    })
+    switch(condition) {
+      case 'down':
+        this.http.put('/api/ledgers/'+this.ledgerId+'/members/'+ id, {condition: 'levelDown'},{observe:'response', headers: headers}).subscribe(res => {
+          console.log(res['body']['data']);
+        },(err: HttpErrorResponse) => {
+          console.log(err['error']['message']);
+        });
+        break;
+      case 'up':
+        this.http.put('/api/ledgers/'+this.ledgerId+'/members/'+ id, {condition: 'levelUp'},{observe:'response', headers: headers}).subscribe(res => {
+          console.log(res['body']['data']);
+        },(err: HttpErrorResponse) => {
+          console.log(err['error']['message']);
+        });
+        break;
+      case 'remove':
+        this.http.put('/api/ledgers/'+this.ledgerId+'/members/'+ id, {condition: 'removeMember'},{observe:'response', headers: headers}).subscribe(res => {
+          console.log(res['body']['data']);
+        },(err: HttpErrorResponse) => {
+          console.log(err['error']['message']);
+        });
+        break;
+      default:
+      //dp nothing
+    }
+  }
+
   setTotal() {
     this.total[0] = this.caculateTotal.calcIncome(this.ledgerDetail);
     this.total[1] = this.caculateTotal.calcCost(this.ledgerDetail);
@@ -73,7 +105,16 @@ export class OrganizationLedgerDetailComponent implements OnInit {
     this.http.get('/api/ledgers/'+ this.ledgerId, {observe:'response', headers: headers}).subscribe(res => {
       this.ledger = res['body']['data'];
       if(this.ledger['admins'].filter(elem => {return this.loginStatus.getCurrentUser()['username'] === elem['username']}).length) this.isAdmin = true;
+      for(let i = 0;i < this.ledger['admins'].length;i++) {
+        for(let j = 0;j < this.ledger['members'].length;j++) {
+          if(this.ledger['admins'][i]['username'] === this.ledger['members'][j]['username']) {
+            this.ledger['members'].splice(j,1);
+            break;
+          }
+        }
+      }
     },(err:HttpErrorResponse)=> {
+      if(err['error']['message'] === 'This request is not authorized.') this.router.navigate(['/']);
       console.log(err);
     });
 

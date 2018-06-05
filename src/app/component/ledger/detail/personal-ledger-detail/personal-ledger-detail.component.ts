@@ -72,6 +72,7 @@ export class PersonalLedgerDetailComponent implements OnInit {
     this.http.get('/api/ledgers/'+ this.ledgerId, {observe:'response', headers: headers}).subscribe(res => {
       this.ledger = res['body']['data'];
     },(err:HttpErrorResponse)=> {
+      if(err['error']['message'] === 'This request is not authorized.') this.router.navigate(['/']);
       console.log(err);
     });
 

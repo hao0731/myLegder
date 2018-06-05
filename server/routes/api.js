@@ -137,9 +137,18 @@ router.route('/ledgers/:id')
 router.route('/ledgers/details/:id')
 .get(auth, (req, res, next) => {
   getAuthUser(req, res, (req, res, user) => {
-    LedgerDetail.find({ledger: req.params.id}).populate({path: 'recorder', select: 'username'}).exec((err, detailData) => {
+    LedgerDetail.find({ledger: req.params.id})
+    .populate({path: 'recorder', select: 'username'})
+    .populate({path: 'ledger', select: 'members'})
+    .exec((err, detailData) => {
       if(err) {
         sendJSONresponse(res, 404, {message: 'not found'});
+      }
+      else if(!detailData.length) {
+        sendJSONresponse(res, 200, {data: detailData});
+      }
+      else if(!detailData[0].ledger.authority === 'close' && !detailData[0].ledger.members.filter(elem => {return elem._id === user._id}).length) {
+        sendJSONresponse(res, 403, {message: 'not Authorized'});
       }
       else {
         sendJSONresponse(res, 200, {data: detailData});
@@ -175,6 +184,14 @@ router.route('/ledgers/details/:id')
         });
       }
     });
+  });
+})
+
+router.route('/ledgers/:ledgerId/members/:memberId')
+.put(auth, (req, res, next) => {
+  getAuthUser(req, res, (req, res, user) => {
+    //do something
+    sendJSONresponse(res, 200, {data: 'haha'});
   });
 })
 
