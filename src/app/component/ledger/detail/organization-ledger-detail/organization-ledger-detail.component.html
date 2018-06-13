@@ -29,33 +29,33 @@
             </div>
             <div id="collapseMember" class="collapse show" aria-labelledby="headingMember" data-parent="#accordion">
               <div class="card-body">
-                <div class="row">
+                <h4 *ngIf="isAdmin">新增會員：</h4>
+                <div *ngIf="alertMessage != ''" class="alert alert-danger">{{alertMessage}}</div>
+                <div *ngIf="isAdmin" class="row">
                   <div class="col-12">
-                    <form>
-                      <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="輸入想要新增的使用者名稱" aria-label="輸入想要新增的使用者名稱" aria-describedby="addBtn">
-                        <div class="input-group-append">
-                          <span class="input-group-text" id="addBtn" style="cursor: pointer;">新增</span>
-                        </div>
+                    <div class="input-group mb-3">
+                      <input type="text" class="form-control" placeholder="輸入想要新增的使用者名稱" aria-label="輸入想要新增的使用者名稱" aria-describedby="addBtn" [(ngModel)]="newMemberName">
+                      <div class="input-group-append">
+                        <span class="input-group-text" id="addBtn" style="cursor: pointer;" (click)="addMember()">新增</span>
                       </div>
-                    </form>
+                    </div>
                   </div>
                 </div>
-                <hr>
+                <hr *ngIf="isAdmin">
                 <div *ngIf="ledger !== undefined" class="table-responsive-sm">
                   <table class="table table-hover">
                     <thead>
                       <tr>
                         <th scope="col">名稱</th>
                         <th scope="col">權限</th>
-                        <th scope="col">操作</th>
+                        <th *ngIf="isAdmin" scope="col">操作</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr *ngFor="let items of ledger.admins">
                         <th scope="row">{{items.username}}</th>
                         <td>管理員</td>
-                        <td>
+                        <td *ngIf="isAdmin">
                           <div class="btn-group" role="group" aria-label="controlMembers">
                             <button type="button" class="btn btn-warning" (click)="controlMemberLevel(items._id, 'down')">降階</button>
                             <button type="button" class="btn btn-danger" (click)="controlMemberLevel(items._id, 'remove')">移除會員</button>
@@ -65,7 +65,7 @@
                       <tr *ngFor="let items of ledger.members">
                         <th scope="row">{{items.username}}</th>
                         <td>會員</td>
-                        <td>
+                        <td *ngIf="isAdmin">
                           <div class="btn-group" role="group" aria-label="controlMembers">
                             <button type="button" class="btn btn-primary" (click)="controlMemberLevel(items._id, 'up')">升階</button>
                             <button type="button" class="btn btn-danger" (click)="controlMemberLevel(items._id, 'remove')">移除會員</button>

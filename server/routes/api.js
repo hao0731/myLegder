@@ -188,6 +188,21 @@ router.route('/ledgers/details/:id')
 })
 
 router.route('/ledgers/:ledgerId/members/:memberId')
+.post(auth, (req, res, next) => {
+  getAuthUser(req, res, (req, res, user) => {
+    User.findOne({username: req.params.memberId}).populate({path: 'ledgers', match:{_id: req.params.ledgerId}}).exec((err, userData) => {
+      if(!userData) {
+        sendJSONresponse(res, 404, {message: 'User is not found, please check the username correct!'});
+      }
+      else if(userData.ledgers.length) {
+        sendJSONresponse(res, 404, {message: 'This user is member.'});
+      }
+      else {
+        sendJSONresponse(res, 200, {data: userData._id});
+      }
+    });
+  });
+})
 .put(auth, (req, res, next) => {
   getAuthUser(req, res, (req, res, user) => {
     //do something

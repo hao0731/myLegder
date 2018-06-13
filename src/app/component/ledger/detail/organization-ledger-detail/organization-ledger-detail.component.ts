@@ -21,6 +21,9 @@ export class OrganizationLedgerDetailComponent implements OnInit {
   BarChart:any;
   classData:any = [0,0,0,0,0,0,0];
 
+  newMemberName:String = '';
+  alertMessage:String = '';
+
   accountForm: FormGroup;
   constructor(private fb: FormBuilder, private http: HttpClient, private router: Router, private route:ActivatedRoute, private loginStatus: LoginStatusService, private caculateTotal: CaculateTotalInterface) { 
     this.accountForm = fb.group({
@@ -44,6 +47,20 @@ export class OrganizationLedgerDetailComponent implements OnInit {
       this.ledgerDetail.push(newDetail);
       this.setTotal();
     },(err: HttpErrorResponse) => {
+      console.log(err);
+    });
+  }
+
+  addMember() {
+    let headers = new HttpHeaders({
+      'Content-Type':'application/json',
+      'Authorization': 'Bearer '+ this.loginStatus.getToken()
+    })
+    this.http.post('/api/ledgers/'+this.ledgerId+'/members/'+this.newMemberName, {name: this.newMemberName},{observe:'response', headers: headers}).subscribe(res => {
+      this.alertMessage = '';
+      console.log(res);
+    },(err: HttpErrorResponse) => {
+      this.alertMessage = err['error']['message'];
       console.log(err);
     });
   }
