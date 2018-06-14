@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
 const auth = require('../auth/auth');
 const getAuthUser = require('../lib/getUser');
 const User = require('../models/userSchema');
@@ -190,23 +191,83 @@ router.route('/ledgers/details/:id')
 router.route('/ledgers/:ledgerId/members/:memberId')
 .post(auth, (req, res, next) => {
   getAuthUser(req, res, (req, res, user) => {
-    User.findOne({username: req.params.memberId}).populate({path: 'ledgers', match:{_id: req.params.ledgerId}}).exec((err, userData) => {
-      if(!userData) {
-        sendJSONresponse(res, 404, {message: 'User is not found, please check the username correct!'});
+    Ledger.findOne({_id: req.params.ledgerId}).exec((error, ledgerData) => {
+      if(!ledgerData || error) {
+        sendJSONresponse(res, 404, {message: 'Oops! something is wrong.'});
       }
-      else if(userData.ledgers.length) {
-        sendJSONresponse(res, 404, {message: 'This user is member.'});
+      else if(!ledgerData.admins.filter(elem => {return elem.toString() === user._id.toString()}).length) {
+        sendJSONresponse(res, 403, {message: 'no Authorized.'});
       }
       else {
-        sendJSONresponse(res, 200, {data: userData._id});
+        User.findOne({username: req.params.memberId}).populate({path: 'ledgers', match:{_id: req.params.ledgerId}}).exec((err, userData) => {
+          if(!userData) {
+            sendJSONresponse(res, 404, {message: 'User is not found, please check the username correct!'});
+          }
+          else if(userData.ledgers.length) {
+            sendJSONresponse(res, 404, {message: 'This user is member.'});
+          }
+          else {
+            userData.ledgers.push(ledgerData._id);
+            ledgerData.members.push(userData._id);
+            ledgerData.save((error, success) => {
+              userData.save((error, success) => {
+                sendJSONresponse(res, 200, {data: { _id: userData._id, username: userData.username }});
+              });
+            });
+          }
+        });
       }
     });
   });
 })
 .put(auth, (req, res, next) => {
   getAuthUser(req, res, (req, res, user) => {
-    //do something
-    sendJSONresponse(res, 200, {data: 'haha'});
+    Ledger.findOne({_id: req.params.ledgerId}).exec((error, ledgerData) => {
+      if(!ledgerData || error) {
+        sendJSONresponse(res, 404, {message: 'Oops! something is wrong.'});
+      }
+      else if(!ledgerData.admins.filter(elem => {return elem.toString() === user._id.toString()}).length || req.params.memberId === ledgerData.author.toString()) {
+        sendJSONresponse(res, 403, {message: 'no Authorized.'});
+      }
+      else {
+        User.findOne({_id: req.params.memberId}).populate({path: 'ledgers', match:{_id: req.params.ledgerId}}).exec((err, userData) => {
+          if(!userData || err) {
+            sendJSONresponse(res, 404, {message: 'User is not found, please check the username correct!'});
+          }
+          else if(!userData.ledgers.length) {
+            sendJSONresponse(res, 404, {message: 'Oops!something is wrong.'});
+          }
+          else {
+            switch(req.body.condition) {
+              case 'levelUp':
+                ledgerData.admins.push(userData._id);
+                ledgerData.save((error, success) => {
+                  sendJSONresponse(res, 200, {data: { _id: userData._id, username: userData.username }});
+                });
+                break;
+              case 'levelDown':
+                ledgerData.admins = ledgerData.admins.filter(elem => {return elem.toString() !== userData._id.toString()});
+                ledgerData.save((error, success) => {
+                  sendJSONresponse(res, 200, {data: { _id: userData._id, username: userData.username }});
+                });
+                break;
+              case 'removeMember':
+                ledgerData.admins = ledgerData.admins.filter(elem => {return elem.toString() !== userData._id.toString()});
+                ledgerData.members = ledgerData.members.filter(elem => {return elem.toString() !== userData._id.toString()});
+                userData.ledgers = userData.ledgers.filter(elem => {return elem._id.toString() !== ledgerData._id.toString()});
+                ledgerData.save((error, success) => {
+                  userData.save((error, success) => {
+                    sendJSONresponse(res, 200, {data: { _id: userData._id, username: userData.username }});
+                  });
+                });
+                break;
+              default:
+                sendJSONresponse(res, 404, {message: 'Oops!something is wrong.'});
+            }
+          }
+        });
+      }
+    });
   });
 })
 

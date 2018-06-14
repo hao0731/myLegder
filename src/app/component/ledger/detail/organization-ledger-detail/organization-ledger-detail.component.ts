@@ -12,6 +12,7 @@ import * as Chart from 'chart.js';
   styleUrls: ['./organization-ledger-detail.component.css']
 })
 export class OrganizationLedgerDetailComponent implements OnInit {
+  localUser:String = this.loginStatus.getCurrentUser()['username'];
   isAdmin: Boolean = false;
   ledgerId: String;
   ledger: any = undefined;
@@ -58,7 +59,7 @@ export class OrganizationLedgerDetailComponent implements OnInit {
     })
     this.http.post('/api/ledgers/'+this.ledgerId+'/members/'+this.newMemberName, {name: this.newMemberName},{observe:'response', headers: headers}).subscribe(res => {
       this.alertMessage = '';
-      console.log(res);
+      this.ledger.members.push(res['body']['data']);
     },(err: HttpErrorResponse) => {
       this.alertMessage = err['error']['message'];
       console.log(err);
@@ -73,22 +74,31 @@ export class OrganizationLedgerDetailComponent implements OnInit {
     switch(condition) {
       case 'down':
         this.http.put('/api/ledgers/'+this.ledgerId+'/members/'+ id, {condition: 'levelDown'},{observe:'response', headers: headers}).subscribe(res => {
-          console.log(res['body']['data']);
+          this.alertMessage = '';
+          this.ledger.admins = this.ledger.admins.filter(elem => {return elem._id !== res['body']['data']['_id']});
+          this.ledger.members.push(res['body']['data']);
         },(err: HttpErrorResponse) => {
+          this.alertMessage = err['error']['message'];
           console.log(err['error']['message']);
         });
         break;
       case 'up':
         this.http.put('/api/ledgers/'+this.ledgerId+'/members/'+ id, {condition: 'levelUp'},{observe:'response', headers: headers}).subscribe(res => {
-          console.log(res['body']['data']);
+          this.alertMessage = '';
+          this.ledger.members = this.ledger.members.filter(elem => {return elem._id !== res['body']['data']['_id']});
+          this.ledger.admins.push(res['body']['data']);
         },(err: HttpErrorResponse) => {
+          this.alertMessage = err['error']['message'];
           console.log(err['error']['message']);
         });
         break;
       case 'remove':
         this.http.put('/api/ledgers/'+this.ledgerId+'/members/'+ id, {condition: 'removeMember'},{observe:'response', headers: headers}).subscribe(res => {
-          console.log(res['body']['data']);
+          this.alertMessage = '';
+          this.ledger.admins = this.ledger.admins.filter(elem => {return elem._id !== res['body']['data']['_id']});
+          this.ledger.members = this.ledger.members.filter(elem => {return elem._id !== res['body']['data']['_id']});
         },(err: HttpErrorResponse) => {
+          this.alertMessage = err['error']['message'];
           console.log(err['error']['message']);
         });
         break;

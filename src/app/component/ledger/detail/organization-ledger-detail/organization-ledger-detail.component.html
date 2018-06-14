@@ -55,11 +55,13 @@
                       <tr *ngFor="let items of ledger.admins">
                         <th scope="row">{{items.username}}</th>
                         <td>管理員</td>
-                        <td *ngIf="isAdmin">
+                        <td *ngIf="isAdmin && items.username != localUser && items.username != ledger.author.username">
                           <div class="btn-group" role="group" aria-label="controlMembers">
                             <button type="button" class="btn btn-warning" (click)="controlMemberLevel(items._id, 'down')">降階</button>
                             <button type="button" class="btn btn-danger" (click)="controlMemberLevel(items._id, 'remove')">移除會員</button>
                           </div>
+                        </td>
+                        <td *ngIf="isAdmin && items.username == localUser || items.username == ledger.author.username">
                         </td>
                       </tr>
                       <tr *ngFor="let items of ledger.members">
